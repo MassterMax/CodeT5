@@ -46,7 +46,7 @@ def get_args_by_task_model(task, sub_task, model_tag):
         elif sub_task == 'medium':
             src_len = 240
             trg_len = 240
-        epoch = 15
+        epoch = 10
         patience = 5
     elif task == 'concode':
         # Read 100000 examples, avg src len: 71, avg trg len: 26, max src len: 567, max trg len: 140
