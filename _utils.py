@@ -187,6 +187,7 @@ def read_translate_examples(filename, data_num):
     return examples
 
 
+# Changed for own purposes!!!
 def read_refine_examples(filename, data_num):
     """Read examples from filename."""
     examples = []
@@ -197,11 +198,13 @@ def read_refine_examples(filename, data_num):
 
     with open(src_filename) as f1, open(trg_filename) as f2:
         for line1, line2 in zip(f1, f2):
+            source_code = json.loads(line1)["code"]
+            target_code = json.loads(line2)["code"]
             examples.append(
                 Example(
                     idx=idx,
-                    source=line1.strip(),
-                    target=line2.strip(),
+                    source=source_code.strip(),
+                    target=target_code.strip(),
                 )
             )
             idx += 1

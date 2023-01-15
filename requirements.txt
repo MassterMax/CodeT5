@@ -1,0 +1,8 @@
+numpy
+torch
+tqdm
+transformers
+tokenizers
+scikit-learn
+tree_sitter
+pandas
