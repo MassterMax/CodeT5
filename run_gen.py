@@ -150,7 +150,8 @@ def eval_bleu_epoch(args, eval_data, eval_examples, model, tokenizer, split_tag,
             bleu = round(smooth_bleu.bleuFromMaps(goldMap, predictionMap)[0], 2)
         else:
             bleu = round(_bleu(gold_fn, output_fn), 2)
-            if args.task in ['concode', 'translate', 'refine']:
+            # if args.task in ['concode', 'translate', 'refine']: FIXME tmp commented
+            if args.task in ['concode', 'translate']:
                 codebleu = calc_code_bleu.get_codebleu(gold_fn, output_fn, args.lang)
 
         result = {'em': np.mean(dev_accs) * 100, 'bleu': bleu}
