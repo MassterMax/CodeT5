@@ -18,7 +18,43 @@ def shuffle_with_mask(arr, mask):
     return new_arr
 
 
-def create_dataset(input_file, output_directory):
+def random_substring(s):
+    pieces = s.split("\n")
+    length = len(pieces)
+    l = random.randint(0, length // 3)
+    r = random.randint(2 * length // 3, length)
+    return "\n".join(pieces[l:r])
+
+
+GOOD_TO_BAD = {
+    "u": "U",
+    "_": "-",
+    "0": "O",
+    "{": "",
+    "@": "a",
+    ".": "",
+    "1": "l",
+    "g": "q"
+}
+
+BAD_TO_GOOD = {GOOD_TO_BAD[key]: key for key in GOOD_TO_BAD}
+MAPPING = {**GOOD_TO_BAD, **BAD_TO_GOOD}
+
+
+def get_generated_examples(source_code, generated_examples, prob=0.1):
+    arr = []
+    for _ in range(generated_examples):
+        subs = random_substring(source_code)
+        new_code = list(subs)
+        for i in range(len(new_code)):
+            if new_code[i] in MAPPING and random.random() < prob:
+                # corrupting
+                new_code[i] = MAPPING[new_code[i]]
+        arr.append((subs, "".join(new_code)))
+    return arr
+
+
+def create_dataset(input_file, output_directory, n_generated_examples, prob):
     df = pd.read_csv(input_file, encoding="utf-16")
     fixed = []
     buggy = []
@@ -26,6 +62,10 @@ def create_dataset(input_file, output_directory):
     for index, row in df.iterrows():
         fixed.append({"code": row["source_code"]})
         buggy.append({"code": row["predicted_code"]})
+        examples = get_generated_examples(row["source_code"], n_generated_examples, prob)
+        for good, bad in examples:
+            fixed.append({"code": good})
+            buggy.append({"code": bad})
 
     data_len = len(fixed)
     shuffle_mask = list(range(data_len))
@@ -62,10 +102,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_file", type=str)
     parser.add_argument("--output_directory", type=str)
+    parser.add_argument("--n_generated_examples", type=int)
+    parser.add_argument("--prob", type=float)
     args = parser.parse_args()
-    create_dataset(args.input_file, args.output_directory)
+    create_dataset(args.input_file, args.output_directory, args.n_generated_examples, args.prob)
 
 
-# python3 ./run_data_preprocessing.py --input_file /path/to/paddele_dataset.csv --output_directory /some/dir
+# python3 ./run_data_preprocessing.py --input_file /path/to/paddele_dataset.csv --output_directory \ /some/dir \
+# --generated_examples 10 --prob 0.1
 if __name__ == "__main__":
+    # e = get_generated_examples("UASDpopsd_a---asd@", 10)
+    # for el in e:
+    #     print(el)
     main()
