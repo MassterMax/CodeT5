@@ -17,6 +17,11 @@ def get_codebleu(refs, hyp, lang, params='0.25,0.25,0.25,0.25'):
     pre_references = [[x.strip() for x in open(file, 'r', encoding='utf-8').readlines()] for file in refs]
     hypothesis = [x.strip() for x in open(hyp, 'r', encoding='utf-8').readlines()]
 
+    print(len(hypothesis))
+    print(len(pre_references))
+    print(hypothesis)
+    print(pre_references)
+
     for i in range(len(pre_references)):
         assert len(hypothesis) == len(pre_references[i])
 
