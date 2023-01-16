@@ -1,22 +1,20 @@
 # Fork of CodeT5 for DL course
 
-Notebook with learning: CodeT5/TuningT5.ipynb
+This is a fork of CodeT5 for fixinig image recognition errors in [ImageToCode](https://github.com/llesha/image-to-code) project
 
-Link for tuned model: https://drive.google.com/file/d/19Sb_aMCi-XIBrjqlDiGpYOwG7MmCpWnj/view?usp=sharing
+Notebook with learning: [CodeT5/TuningT5.ipynb](https://github.com/MassterMax/CodeT5/blob/main/TuningT5.ipynb)
 
-You can use it with provided code:
+Tuned model is [here](https://drive.google.com/file/d/19Sb_aMCi-XIBrjqlDiGpYOwG7MmCpWnj/view?usp=sharing)
+
+### Usage:
 
 ```python
 from transformers import T5Config, RobertaTokenizer, T5ForConditionalGeneration
 
 tokenizer = RobertaTokenizer.from_pretrained('Salesforce/codet5-small')
 config = T5Config.from_pretrained('Salesforce/codet5-small')
-model = T5ForConditionalGeneration.from_pretrained("/path/to/bin",  config=config)
-```
+model = T5ForConditionalGeneration.from_pretrained("/path/to/bin/model",  config=config)
 
-### Example:
-
-```python
 text = """
 com.qooqle.protobuf.MessaqeOrBuilder 
 /**
