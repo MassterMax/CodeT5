@@ -13,3 +13,30 @@ tokenizer = RobertaTokenizer.from_pretrained('Salesforce/codet5-small')
 config = T5Config.from_pretrained('Salesforce/codet5-small')
 model = T5ForConditionalGeneration.from_pretrained("/path/to/bin",  config=config)
 ```
+
+### Example:
+
+```python
+text = """
+com.qooqle.protobuf.MessaqeOrBuilder 
+/**
+*<code>bool is_invalid = 1;</code>
+* @return The isInvalid.
+*/
+boolean getIsInvalid();
+"""
+
+input_ids = tokenizer(text, return_tensors="pt").input_ids
+generated_ids = model.generate(input_ids, max_length=len(input_ids[0]))
+print(tokenizer.decode(generated_ids[0], skip_special_tokens=True))
+```
+This prints following:
+```
+}
+com.google.protobuf.MessageOrBuilder 
+/**
+* <code>bool is_invalid = 1;</code>
+* @return The isInvalid.
+*/
+boolean getIsInvalid();
+```
