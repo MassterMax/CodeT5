@@ -21,4 +21,4 @@ jobs:
 
       - run: ssh masstermax@${{ secrets.SSH_HOST }}
 
-      - run: ls
+      - run: echo "hello there!" >> .tmp
