@@ -54,7 +54,7 @@ def get_generated_examples(source_code, generated_examples, prob=0.1):
     return arr
 
 
-def create_dataset(input_file, output_directory, n_generated_examples, prob):
+def create_dataset(input_file, output_directory, n_generated_examples, prob, test_sz=0.1):
     df = pd.read_csv(input_file, encoding="utf-16")
     fixed = []
     buggy = []
@@ -62,10 +62,12 @@ def create_dataset(input_file, output_directory, n_generated_examples, prob):
     for index, row in df.iterrows():
         fixed.append({"code": row["source_code"]})
         buggy.append({"code": row["predicted_code"]})
-        examples = get_generated_examples(row["source_code"], n_generated_examples, prob)
-        for good, bad in examples:
-            fixed.append({"code": good})
-            buggy.append({"code": bad})
+
+        if prob > 0:
+            examples = get_generated_examples(row["source_code"], n_generated_examples, prob)
+            for good, bad in examples:
+                fixed.append({"code": good})
+                buggy.append({"code": bad})
 
     data_len = len(fixed)
     shuffle_mask = list(range(data_len))
@@ -80,7 +82,7 @@ def create_dataset(input_file, output_directory, n_generated_examples, prob):
     test_path_buggy = f"{output_directory}/test.buggy-fixed.buggy"
     test_path_fixed = f"{output_directory}/test.buggy-fixed.fixed"
 
-    test_size = int(data_len * 0.1)
+    test_size = int(data_len * test_sz)
     test_with_valid_size = 2 * test_size
 
     fixed_train = fixed[:-test_with_valid_size]
@@ -104,8 +106,9 @@ def main():
     parser.add_argument("--output_directory", type=str)
     parser.add_argument("--n_generated_examples", type=int)
     parser.add_argument("--prob", type=float)
+    parser.add_argument("--test_sz", type=float)
     args = parser.parse_args()
-    create_dataset(args.input_file, args.output_directory, args.n_generated_examples, args.prob)
+    create_dataset(args.input_file, args.output_directory, args.n_generated_examples, args.prob, args.test_sz)
 
 
 # python3 ./run_data_preprocessing.py --input_file /path/to/paddele_dataset.csv --output_directory \ /some/dir \
