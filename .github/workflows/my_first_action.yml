@@ -23,4 +23,3 @@ jobs:
             git checkout master &&
             git pull &&
             env BOT_API_TOKEN=${{ secrets.BOT_API_TOKEN }} bash run.sh"
-
