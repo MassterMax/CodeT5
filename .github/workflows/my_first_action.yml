@@ -19,5 +19,6 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }}  >> ~/.ssh/known_hosts
 
-      - run: ssh -t masstermax@${{ secrets.SSH_HOST }}
-      - run: echo "123" >> tmp123
+      - run: ssh -t masstermax@${{ secrets.SSH_HOST }} "
+            echo '123' >> tmp123 &&
+            ls -a"
