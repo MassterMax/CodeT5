@@ -27,18 +27,18 @@ def random_substring(s):
 
 
 GOOD_TO_BAD = {
-    "u": "U",
-    "_": "-",
-    "0": "O",
-    "{": "",
-    "@": "a",
-    ".": "",
-    "1": "l",
-    "g": "q"
+    "O": ["0", "o"],
+    "S": ["s"],
+    "C": ["c"],
+    "g": ["q"],
+    "}": ["1"],
+    "|": ["I", "l"],
+    '"': ["u"],
+    "s": ["S"],
+    "c": ["C"],
+    "0": ["O"],
+    ";": [":"],
 }
-
-BAD_TO_GOOD = {GOOD_TO_BAD[key]: key for key in GOOD_TO_BAD}
-MAPPING = {**GOOD_TO_BAD, **BAD_TO_GOOD}
 
 
 def get_generated_examples(source_code, generated_examples, prob=0.1):
@@ -47,9 +47,9 @@ def get_generated_examples(source_code, generated_examples, prob=0.1):
         subs = random_substring(source_code)
         new_code = list(subs)
         for i in range(len(new_code)):
-            if new_code[i] in MAPPING and random.random() < prob:
+            if new_code[i] in GOOD_TO_BAD and random.random() < prob:
                 # corrupting
-                new_code[i] = MAPPING[new_code[i]]
+                new_code[i] = random.choice(GOOD_TO_BAD[new_code[i]])
         arr.append((subs, "".join(new_code)))
     return arr
 
